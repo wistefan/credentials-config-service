@@ -14,9 +14,4 @@ public class ConflictException extends RuntimeException {
 		super(message);
 		this.entityId = entityId;
 	}
-
-	public ConflictException(String message, Throwable cause, String entityId) {
-		super(message, cause);
-		this.entityId = entityId;
-	}
 }

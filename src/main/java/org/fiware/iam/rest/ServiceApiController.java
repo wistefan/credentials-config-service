@@ -21,7 +21,9 @@ import org.fiware.iam.repository.Service;
 import org.fiware.iam.repository.ServiceRepository;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.net.URI;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -42,6 +44,7 @@ public class ServiceApiController implements ServiceApi {
 			throw new ConflictException(String.format("The service with id %s already exists.", serviceVO.getId()),
 					serviceVO.getId());
 		}
+		validateServiceVO(serviceVO);
 		return HttpResponse.created(
 				URI.create(
 						ServiceApi.PATH_GET_SERVICE.replace(
@@ -81,21 +84,22 @@ public class ServiceApiController implements ServiceApi {
 	}
 
 	@Override public HttpResponse<ServicesVO> getServices(@Nullable Integer nullablePageSize,
-			@Nullable Integer nullableOffset) {
+			@Nullable Integer nullablePage) {
 		var pageSize = Optional.ofNullable(nullablePageSize).orElse(100);
-		var offset = Optional.ofNullable(nullableOffset).orElse(0);
+		var page = Optional.ofNullable(nullablePage).orElse(0);
 		if (pageSize < 1) {
 			throw new IllegalArgumentException("PageSize has to be at least 1.");
 		}
-		if (offset < 0) {
+		if (page < 0) {
 			throw new IllegalArgumentException("Offsets below 0 are not supported.");
 		}
+
 		Page<Service> requestedPage = serviceRepository.findAll(
-				Pageable.from(offset, pageSize, Sort.of(Sort.Order.asc("id"))));
+				Pageable.from(page, pageSize, Sort.of(Sort.Order.asc("id"))));
 		return HttpResponse.ok(
 				new ServicesVO()
 						.total((int) requestedPage.getTotalSize())
-						.offset(offset)
+						.pageNumber(page)
 						.pageSize(requestedPage.getContent().size())
 						.services(requestedPage.getContent().stream().map(serviceMapper::map).toList()));
 	}
@@ -106,6 +110,7 @@ public class ServiceApiController implements ServiceApi {
 		if (serviceVO.getId() != null && !id.equals(serviceVO.getId())) {
 			throw new IllegalArgumentException("The id of a service cannot be updated.");
 		}
+		validateServiceVO(serviceVO);
 		if (!serviceRepository.existsById(id)) {
 			return HttpResponse.notFound();
 		}
@@ -115,4 +120,19 @@ public class ServiceApiController implements ServiceApi {
 		return HttpResponse.ok(
 				serviceMapper.map(serviceRepository.save(serviceMapper.map(serviceVO))));
 	}
+
+	private void validateServiceVO(ServiceVO serviceVO) {
+		if (serviceVO.getCredentials() == null) {
+			throw new IllegalArgumentException("Credentials cannot be null.");
+		}
+		Optional<CredentialVO> nullType = serviceVO
+				.getCredentials()
+				.stream()
+				.filter(cvo -> cvo.getType() == null)
+				.findFirst();
+		if (nullType.isPresent()) {
+			throw new IllegalArgumentException("Type of a credential cannot be null.");
+		}
+	}
+
 }
