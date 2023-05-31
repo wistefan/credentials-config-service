@@ -20,6 +20,7 @@ import org.fiware.iam.exception.ConflictException;
 import org.fiware.iam.repository.Service;
 import org.fiware.iam.repository.ServiceRepository;
 
+import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.Optional;
 
@@ -95,11 +96,13 @@ public class ServiceApiController implements ServiceApi {
 				new ServicesVO()
 						.total((int) requestedPage.getTotalSize())
 						.offset(offset)
-						.pageSize(requestedPage.getSize())
+						.pageSize(requestedPage.getContent().size())
 						.services(requestedPage.getContent().stream().map(serviceMapper::map).toList()));
 	}
 
-	@Override public HttpResponse<ServiceVO> updateService(@NonNull String id, @NonNull ServiceVO serviceVO) {
+	@Transactional
+	@Override
+	public HttpResponse<ServiceVO> updateService(@NonNull String id, @NonNull ServiceVO serviceVO) {
 		if (serviceVO.getId() != null && !id.equals(serviceVO.getId())) {
 			throw new IllegalArgumentException("The id of a service cannot be updated.");
 		}
@@ -108,7 +111,8 @@ public class ServiceApiController implements ServiceApi {
 		}
 		// just in case none is set in the object
 		serviceVO.setId(id);
+		serviceRepository.deleteById(id);
 		return HttpResponse.ok(
-				serviceMapper.map(serviceRepository.update(serviceMapper.map(serviceVO))));
+				serviceMapper.map(serviceRepository.save(serviceMapper.map(serviceVO))));
 	}
 }

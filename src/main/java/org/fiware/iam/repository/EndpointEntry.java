@@ -31,6 +31,8 @@ public class EndpointEntry {
 	@Id
 	private Integer id;
 
+	private EndpointType type;
+
 	private String endpoint;
 
 	@ManyToOne(fetch = FetchType.LAZY)

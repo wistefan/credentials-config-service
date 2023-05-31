@@ -34,10 +34,7 @@ public class Credential {
 	private String credentialType;
 
 	@OneToMany(mappedBy = "credential", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<EndpointEntry> trustedIssuersLists;
-
-	@OneToMany(mappedBy = "credential", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<EndpointEntry> trustedParticipantsLists;
+	private List<EndpointEntry> trustedLists;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "service_id")

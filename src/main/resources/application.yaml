@@ -21,6 +21,7 @@ datasources:
     username: user
     password: password
     dialect: MYSQL
+
 jpa:
   default:
     packages-to-scan:
