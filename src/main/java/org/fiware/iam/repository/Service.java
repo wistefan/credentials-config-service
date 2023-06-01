@@ -21,6 +21,7 @@ import java.util.Collection;
 @Entity
 @EqualsAndHashCode
 public class Service {
+
 	@Id
 	private String id;
 

@@ -7,8 +7,6 @@ import org.fiware.iam.repository.EndpointEntry;
 import org.fiware.iam.repository.EndpointType;
 import org.fiware.iam.repository.Service;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +44,10 @@ public interface ServiceMapper {
 				.trustedParticipantsLists(entriesToParticipants(credential.getTrustedLists()));
 	}
 
+	/**
+	 * Map a list of string-entries, encoding TrustedParticipants endpoints to a list of {@link EndpointEntry} with
+	 * type {{@link EndpointType.TRUSTED_PARTICIPANTS}
+	 */
 	default List<EndpointEntry> participantsToEntries(List<String> endpoints) {
 		if (endpoints == null) {
 			return null;
@@ -57,6 +59,10 @@ public interface ServiceMapper {
 				.toList();
 	}
 
+	/**
+	 * Map a list of string-entries, encoding TrustedIssuers endpoints to a list of {@link EndpointEntry} with
+	 * type {{@link EndpointType.TRUSTED_ISSUERS}
+	 */
 	default List<EndpointEntry> issuersToEntries(List<String> endpoints) {
 		if (endpoints == null) {
 			return null;
@@ -68,6 +74,9 @@ public interface ServiceMapper {
 				.toList();
 	}
 
+	/**
+	 * Return issuer endpoints from the {@link EndpointEntry} list to a list of strings
+	 */
 	default List<String> entriesToIssuers(List<EndpointEntry> endpoints) {
 		if (endpoints == null) {
 			return null;
@@ -78,6 +87,9 @@ public interface ServiceMapper {
 				.toList();
 	}
 
+	/**
+	 * Return participant endpoints from the {@link EndpointEntry} list to a list of strings
+	 */
 	default List<String> entriesToParticipants(List<EndpointEntry> endpoints) {
 		if (endpoints == null) {
 			return null;

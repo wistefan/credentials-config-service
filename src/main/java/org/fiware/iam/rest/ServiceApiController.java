@@ -21,9 +21,7 @@ import org.fiware.iam.repository.Service;
 import org.fiware.iam.repository.ServiceRepository;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.net.URI;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -121,6 +119,7 @@ public class ServiceApiController implements ServiceApi {
 				serviceMapper.map(serviceRepository.save(serviceMapper.map(serviceVO))));
 	}
 
+	// validate a service vo, e.g. check forbidden null values
 	private void validateServiceVO(ServiceVO serviceVO) {
 		if (serviceVO.getCredentials() == null) {
 			throw new IllegalArgumentException("Credentials cannot be null.");

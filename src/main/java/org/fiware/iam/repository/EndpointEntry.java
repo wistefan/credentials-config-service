@@ -9,12 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
-import java.net.URL;
 
 /**
  * Entity to represent a single endpoint for either the trusted-issuers-list or the trusted-participants-list
