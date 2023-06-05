@@ -21,7 +21,7 @@ and verify the credentials they provide. To get this done, it needs information 
 To do so, it requires a service that provides such information, e.g. the Credentials Config Service. See the following diagram 
 on how the service integrates into the framework.
 
-![overview-setup](doc/overview.svg)
+![overview-setup](doc/overview.png)
 
 ## Installation
 
