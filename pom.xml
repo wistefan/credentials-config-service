@@ -43,7 +43,7 @@
         <project.summary>A service to provide information about the scope to be requested and the trust-anchors(trusted issuers list and trusted participants list)
             for service and credential combinations.
         </project.summary>
-        <project.url>https://github.com/wistefan/credentials-config-service</project.url>
+        <project.url>https://github.com/fiware/credentials-config-service</project.url>
         <project.license.name>Apache License 2.0</project.license.name>
         <project.license.identifier>Apache License 2.0</project.license.identifier>
         <project.license.url>https://www.apache.org/licenses/LICENSE-2.0</project.license.url>
@@ -56,7 +56,7 @@
         <!-- oci -->
         <exec.mainClass>org.fiware.iam.Application</exec.mainClass>
         <image.registry>quay.io</image.registry>
-        <image.repository>wi_stefan</image.repository>
+        <image.repository>fiware</image.repository>
 
         <!-- lazy dev -->
         <version.org.mapstruct>1.5.3.Final</version.org.mapstruct>
