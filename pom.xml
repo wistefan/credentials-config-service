@@ -245,7 +245,7 @@
                             <apiPackage>org.fiware.iam.ccs.api</apiPackage>
                             <strictSpec>true</strictSpec>
                             <modelPackage>org.fiware.iam.ccs.model</modelPackage>
-                            <generateAliasAsModel>true</generateAliasAsModel>
+                            <generateAliasAsModel>false</generateAliasAsModel>
                             <generateApiTests>true</generateApiTests>
                             <generatorName>micronaut</generatorName>
                             <modelNameSuffix>VO</modelNameSuffix>
