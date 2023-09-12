@@ -25,6 +25,8 @@ public class Service {
 	@Id
 	private String id;
 
+	private String defaultScope;
+
 	@OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private Collection<Credential> credentials;
 }

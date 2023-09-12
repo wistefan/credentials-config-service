@@ -203,8 +203,8 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     public void getService200() throws Exception {
 
         HttpResponse<ServiceVO> theServiceResponse = testClient.getService(theService.getId());
-        assertEquals(HttpStatus.OK, theServiceResponse.getStatus(), "The service should be responded.");
-        assertEquals(theService, theServiceResponse.body(), "The service should be responded.");
+        assertEquals(HttpStatus.OK, theServiceResponse.getStatus(), "The service should be responded with status OK.");
+        assertEquals(theService, theServiceResponse.body(), "The service should be responded with equal service object.");
     }
 
     @ParameterizedTest
@@ -298,8 +298,8 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     @Override
     public void updateService200() throws Exception {
         HttpResponse<ServiceVO> updatedService = testClient.updateService(theService.getId(), theService);
-        assertEquals(HttpStatus.OK, updatedService.status(), "The service should have been updated.");
-        assertEquals(theService, updatedService.body(), "The service should have been updated.");
+        assertEquals(HttpStatus.OK, updatedService.status(), "The service should have been updated withst status OK.");
+        assertEquals(theService, updatedService.body(), "The service should have been updated with an equal object.");
     }
 
     @ParameterizedTest
