@@ -1,11 +1,10 @@
 package org.fiware.iam;
 
 import org.fiware.iam.ccs.model.CredentialVO;
+import org.fiware.iam.ccs.model.ServiceScopesEntryVO;
+import org.fiware.iam.ccs.model.ServiceScopesVO;
 import org.fiware.iam.ccs.model.ServiceVO;
-import org.fiware.iam.repository.Credential;
-import org.fiware.iam.repository.EndpointEntry;
-import org.fiware.iam.repository.EndpointType;
-import org.fiware.iam.repository.Service;
+import org.fiware.iam.repository.*;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
@@ -20,6 +19,14 @@ public interface ServiceMapper {
 	Service map(ServiceVO serviceVO);
 
 	ServiceVO map(Service service);
+
+	ServiceScopesEntry map(ServiceScopesEntryVO serviceScopesEntryVO);
+
+	ServiceScopesEntryVO map(ServiceScopesEntry serviceScopesEntry);
+
+	ServiceScopes map(ServiceScopesVO serviceScopesVO);
+
+	ServiceScopesVO map(ServiceScopes serviceScopes);
 
 	default Credential map(CredentialVO credentialVO) {
 		if (credentialVO == null) {

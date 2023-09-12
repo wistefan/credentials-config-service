@@ -27,6 +27,8 @@ public class Service {
 
 	private String defaultScope;
 
-	@OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	private Collection<Credential> credentials;
+	private ServiceScopes scopes;
+
+	//@OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	//private Collection<Credential> credentials;
 }
