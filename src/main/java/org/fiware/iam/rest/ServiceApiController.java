@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fiware.iam.ServiceMapper;
 import org.fiware.iam.ccs.api.ServiceApi;
-import org.fiware.iam.ccs.model.CredentialVO;
-import org.fiware.iam.ccs.model.ServiceVO;
-import org.fiware.iam.ccs.model.ServicesVO;
+import org.fiware.iam.ccs.model.*;
 import org.fiware.iam.exception.ConflictException;
 import org.fiware.iam.repository.Service;
 import org.fiware.iam.repository.ServiceRepository;
@@ -60,15 +58,18 @@ public class ServiceApiController implements ServiceApi {
     }
 
     @Override
-    public HttpResponse<java.util.List<java.lang.String>> getScopeForService(@NonNull String id) {
+    public HttpResponse<ScopeVO> getScopeForService(@NonNull String id) {
         if (!serviceRepository.existsById(id)) {
             return HttpResponse.notFound();
         }
-        return HttpResponse.ok(serviceMapper.map(serviceRepository.getById(id))
-                .getCredentials()
-                .stream()
-                .map(CredentialVO::getType)
-                .toList());
+        String defaultOidcScope = serviceMapper.map(serviceRepository.getById(id)).getDefaultOidcScope();
+        ServiceScopesEntryVO serviceScopesEntryVO = serviceMapper.map(serviceRepository.getById(id))
+                .getOidcScopes()
+                .getAdditionalProperties()
+                .get(defaultOidcScope);
+        ScopeVO scopeVO = new ScopeVO();
+        scopeVO.addAll(serviceScopesEntryVO.stream().map(CredentialVO::getType).toList());
+        return HttpResponse.ok(scopeVO);
     }
 
     @Override
@@ -120,11 +121,23 @@ public class ServiceApiController implements ServiceApi {
 
     // validate a service vo, e.g. check forbidden null values
     private void validateServiceVO(ServiceVO serviceVO) {
-        if (serviceVO.getCredentials() == null) {
-            throw new IllegalArgumentException("Credentials cannot be null.");
+        if (serviceVO.getDefaultOidcScope() == null) {
+            throw new IllegalArgumentException("Default OIDC scope cannot be null.");
         }
-        Optional<CredentialVO> nullType = serviceVO
-                .getCredentials()
+        if (serviceVO.getOidcScopes() == null) {
+            throw new IllegalArgumentException("OIDC scopes cannot be null.");
+        }
+
+        String defaultOidcScope = serviceVO.getDefaultOidcScope();
+        if (serviceVO.getOidcScopes().getAdditionalProperties().get(defaultOidcScope) == null) {
+            throw new IllegalArgumentException("Default OIDC scope must exist in OIDC scopes array.");
+        }
+
+        ServiceScopesEntryVO serviceScopesEntryVO = serviceVO
+                .getOidcScopes()
+                .getAdditionalProperties()
+                .get(defaultOidcScope);
+        Optional<CredentialVO> nullType = serviceScopesEntryVO
                 .stream()
                 .filter(cvo -> cvo.getType() == null)
                 .findFirst();
