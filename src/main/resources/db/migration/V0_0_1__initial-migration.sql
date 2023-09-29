@@ -1,12 +1,20 @@
 CREATE TABLE IF NOT EXISTS `service` (
-    `id` varchar(255) NOT NULL PRIMARY KEY
+    `id` varchar(255) NOT NULL PRIMARY KEY,
+    `default_oidc_scope` varchar(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `service_scope` (
+    `id` varchar(255) NOT NULL PRIMARY KEY,
+    `scope_name` varchar(255) NOT NULL,
+    `service_id` varchar(255) NOT NULL,
+    CONSTRAINT `fk_service` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `credential` (
     `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `credential_type` varchar(255) NOT NULL,
-    `service_id` varchar(255) NOT NULL,
-    CONSTRAINT `fk_service` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`) ON DELETE CASCADE
+    `service_scope_id` varchar(255) NOT NULL,
+    CONSTRAINT `fk_scope` FOREIGN KEY (`service_scope_id`) REFERENCES `service_scope` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `endpoint_entry` (

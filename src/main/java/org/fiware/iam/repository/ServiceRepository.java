@@ -19,8 +19,9 @@ public interface ServiceRepository extends PageableRepository<Service, String> {
 	 * @param id of the service
 	 * @return the complete service
 	 */
-	@Join(value = "credentials", type = Join.Type.LEFT_FETCH)
-	@Join(value = "credentials.trustedLists", type = Join.Type.LEFT_FETCH)
+	@Join(value = "oidcScopes", type = Join.Type.LEFT_FETCH)
+	@Join(value = "oidcScopes.credentials", type = Join.Type.LEFT_FETCH)
+	@Join(value = "oidcScopes.credentials.trustedLists", type = Join.Type.LEFT_FETCH)
 	Service getById(String id);
 
 	/**
@@ -30,8 +31,9 @@ public interface ServiceRepository extends PageableRepository<Service, String> {
 	 * @return the current page
 	 */
 	@NonNull
-	@Join(value = "credentials", type = Join.Type.LEFT_FETCH)
-	@Join(value = "credentials.trustedLists", type = Join.Type.LEFT_FETCH)
+	@Join(value = "oidcScopes", type = Join.Type.LEFT_FETCH)
+	@Join(value = "oidcScopes.credentials", type = Join.Type.LEFT_FETCH)
+	@Join(value = "oidcScopes.credentials.trustedLists", type = Join.Type.LEFT_FETCH)
 	Page<Service> findAll(@NonNull Pageable pageable);
 }
 
