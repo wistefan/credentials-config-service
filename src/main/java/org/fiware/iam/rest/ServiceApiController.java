@@ -58,15 +58,18 @@ public class ServiceApiController implements ServiceApi {
     }
 
     @Override
-    public HttpResponse<ScopeVO> getScopeForService(@NonNull String id) {
+    public HttpResponse<ScopeVO> getScopeForService(@NonNull String id, @Nullable String oidcScope) {
         if (!serviceRepository.existsById(id)) {
             return HttpResponse.notFound();
         }
-        String defaultOidcScope = serviceMapper.map(serviceRepository.getById(id)).getDefaultOidcScope();
+        String selectedOidcScope =
+                oidcScope == null ?
+                        serviceMapper.map(serviceRepository.getById(id)).getDefaultOidcScope() :
+                        oidcScope;
         ServiceScopesEntryVO serviceScopesEntryVO = serviceMapper.map(serviceRepository.getById(id))
                 .getOidcScopes()
                 .getAdditionalProperties()
-                .get(defaultOidcScope);
+                .get(selectedOidcScope);
         ScopeVO scopeVO = new ScopeVO();
         scopeVO.addAll(serviceScopesEntryVO.stream().map(CredentialVO::getType).toList());
         return HttpResponse.ok(scopeVO);
