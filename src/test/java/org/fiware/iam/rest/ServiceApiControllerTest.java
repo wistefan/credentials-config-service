@@ -59,50 +59,165 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     }
 
     private static Stream<Arguments> validServices() {
+        // Empty credential
+        ServiceScopesEntryVO serviceScopesEntryVO =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO = CredentialVOTestExample.build();
+        serviceScopesEntryVO.add(credentialVO);
+        ServiceScopesVO serviceScopesVO = ServiceScopesVOTestExample.build();
+        serviceScopesVO.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO);
+        ServiceVO serviceVO = ServiceVOTestExample.build().oidcScopes(serviceScopesVO);
+        serviceVO.setDefaultOidcScope("test-oidc-scope");
+
+        // 2 - Credential with type
+        ServiceScopesEntryVO serviceScopesEntryVO2 =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO2 = CredentialVOTestExample.build().type("my-credential");
+        serviceScopesEntryVO2.add(credentialVO2);
+        ServiceScopesVO serviceScopesVO2 = ServiceScopesVOTestExample.build();
+        serviceScopesVO2.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO2);
+        ServiceVO serviceVO2 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO2);
+        serviceVO2.setDefaultOidcScope("test-oidc-scope");
+
+        // 3 - Credential with type + TIL entry
+        ServiceScopesEntryVO serviceScopesEntryVO3 =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO3 = CredentialVOTestExample.build()
+                .type("my-credential")
+                .trustedIssuersLists(List.of("http://til.de"));
+        serviceScopesEntryVO3.add(credentialVO3);
+        ServiceScopesVO serviceScopesVO3 = ServiceScopesVOTestExample.build();
+        serviceScopesVO3.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO3);
+        ServiceVO serviceVO3 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO3);
+        serviceVO3.setDefaultOidcScope("test-oidc-scope");
+
+        // 4 - Credential with type + 2 TIL entries
+        ServiceScopesEntryVO serviceScopesEntryVO4 =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO4 = CredentialVOTestExample.build()
+                .type("my-credential")
+                .trustedIssuersLists(List.of("http://til.de", "http://another-til.de"));
+        serviceScopesEntryVO4.add(credentialVO4);
+        ServiceScopesVO serviceScopesVO4 = ServiceScopesVOTestExample.build();
+        serviceScopesVO4.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO4);
+        ServiceVO serviceVO4 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO4);
+        serviceVO4.setDefaultOidcScope("test-oidc-scope");
+
+        // 5 - Credential with type + TIL entry + TIR entry
+        ServiceScopesEntryVO serviceScopesEntryVO5 =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO5 = CredentialVOTestExample.build()
+                .type("my-credential")
+                .trustedIssuersLists(List.of("http://til.de"))
+                .trustedParticipantsLists(List.of("http://tir.de"));
+        serviceScopesEntryVO5.add(credentialVO5);
+        ServiceScopesVO serviceScopesVO5 = ServiceScopesVOTestExample.build();
+        serviceScopesVO5.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO5);
+        ServiceVO serviceVO5 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO5);
+        serviceVO5.setDefaultOidcScope("test-oidc-scope");
+
+        // 6 - Credential with type + TIL entry + 2 TIR entries
+        ServiceScopesEntryVO serviceScopesEntryVO6 =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO6 = CredentialVOTestExample.build()
+                .type("my-credential")
+                .trustedIssuersLists(List.of("http://til.de"))
+                .trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
+        serviceScopesEntryVO6.add(credentialVO6);
+        ServiceScopesVO serviceScopesVO6 = ServiceScopesVOTestExample.build();
+        serviceScopesVO6.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO6);
+        ServiceVO serviceVO6 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO6);
+        serviceVO6.setDefaultOidcScope("test-oidc-scope");
+
+        // 7 - Credential with type + 2 TIR entries
+        ServiceScopesEntryVO serviceScopesEntryVO7 =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO7 = CredentialVOTestExample.build()
+                .type("my-credential")
+                .trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
+        serviceScopesEntryVO7.add(credentialVO7);
+        ServiceScopesVO serviceScopesVO7 = ServiceScopesVOTestExample.build();
+        serviceScopesVO7.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO7);
+        ServiceVO serviceVO7 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO7);
+        serviceVO7.setDefaultOidcScope("test-oidc-scope");
+
+        // 8 - 2 Credentials with type (2 TIR entries / 1 TIR + 1 TIL entry)
+        ServiceScopesEntryVO serviceScopesEntryVO8 =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO8_1 = CredentialVOTestExample.build()
+                .type("my-credential")
+                .trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
+        CredentialVO credentialVO8_2 = CredentialVOTestExample.build()
+                .type("another-credential")
+                .trustedIssuersLists(List.of("til.de"))
+                .trustedParticipantsLists(List.of("http://tir.de"));
+        serviceScopesEntryVO8.add(credentialVO8_1);
+        serviceScopesEntryVO8.add(credentialVO8_2);
+        ServiceScopesVO serviceScopesVO8 = ServiceScopesVOTestExample.build();
+        serviceScopesVO8.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO8);
+        ServiceVO serviceVO8 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO8);
+        serviceVO8.setDefaultOidcScope("test-oidc-scope");
+
+        // 9 - 2 OIDC scopes, each with different credentials
+        ServiceScopesEntryVO serviceScopesEntryVO9_1 =
+                ServiceScopesEntryVOTestExample.build();
+        ServiceScopesEntryVO serviceScopesEntryVO9_2 =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO9_1 = CredentialVOTestExample.build()
+                .type("my-credential")
+                .trustedIssuersLists(List.of("http://til.de"))
+                .trustedParticipantsLists(List.of("http://tir.de"));
+        serviceScopesEntryVO9_1.add(credentialVO9_1);
+        CredentialVO credentialVO9_2 = CredentialVOTestExample.build()
+                .type("my-credential")
+                .trustedIssuersLists(List.of("http://til.de"))
+                .trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
+        CredentialVO credentialVO9_3 = CredentialVOTestExample.build()
+                .type("another-credential")
+                .trustedIssuersLists(List.of("http://til.de"))
+                .trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
+        serviceScopesEntryVO9_2.add(credentialVO9_2);
+        serviceScopesEntryVO9_2.add(credentialVO9_3);
+        ServiceScopesVO serviceScopesVO9 = ServiceScopesVOTestExample.build();
+        serviceScopesVO5.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO9_1);
+        serviceScopesVO5.setAdditionalProperties("another-oidc-scope", serviceScopesEntryVO9_2);
+        ServiceVO serviceVO9 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO9);
+        serviceVO9.setDefaultOidcScope("test-oidc-scope");
+
         return Stream.of(
+                // Empty service
                 Arguments.of(
                         ServiceVOTestExample.build(), List.of()),
+                // Empty service with ID
                 Arguments.of(ServiceVOTestExample.build().id("my-service"), List.of()),
-                Arguments.of(ServiceVOTestExample.build().credentials(List.of(CredentialVOTestExample.build())),
+                // Empty credential
+                Arguments.of(serviceVO,
                         List.of("VerifiableCredential")),
-                Arguments.of(ServiceVOTestExample.build()
-                                .credentials(List.of(CredentialVOTestExample.build().type("my-credential"))),
+                // 2 - Credential with type
+                Arguments.of(serviceVO2,
                         List.of("my-credential")),
-                Arguments.of(ServiceVOTestExample.build()
-                                .credentials(List.of(CredentialVOTestExample.build().type("my-credential")
-                                        .trustedIssuersLists(List.of("http://til.de")))
-                                ),
+                // 3 - Credential with type + TIL entry
+                Arguments.of(serviceVO3,
                         List.of("my-credential")),
-                Arguments.of(ServiceVOTestExample.build()
-                                .credentials(List.of(CredentialVOTestExample.build().type("my-credential")
-                                        .trustedIssuersLists(List.of("http://til.de", "http://another-til.de")))
-                                ),
+                // 4 - Credential with type + 2 TIL entries
+                Arguments.of(serviceVO4,
                         List.of("my-credential")),
-                Arguments.of(ServiceVOTestExample.build()
-                                .credentials(List.of(CredentialVOTestExample.build().type("my-credential")
-                                        .trustedIssuersLists(List.of("http://til.de"))
-                                        .trustedParticipantsLists(List.of("http://tir.de")))
-                                ),
+                // 5 - Credential with type + TIL entry + TIR entry
+                Arguments.of(serviceVO5,
                         List.of("my-credential")),
-                Arguments.of(ServiceVOTestExample.build()
-                                .credentials(List.of(CredentialVOTestExample.build().type("my-credential")
-                                        .trustedIssuersLists(List.of("http://til.de"))
-                                        .trustedParticipantsLists(List.of("http://tir.de", "another-tir.de")))
-                                ),
+                // 6 - Credential with type + TIL entry + 2 TIR entries
+                Arguments.of(serviceVO6,
                         List.of("my-credential")),
-                Arguments.of(ServiceVOTestExample.build()
-                                .credentials(List.of(CredentialVOTestExample.build().type("my-credential")
-                                        .trustedParticipantsLists(List.of("http://tir.de", "another-tir.de")))
-                                ),
+                // 7 - Credential with type + 2 TIR entries
+                Arguments.of(serviceVO7,
                         List.of("my-credential")),
-                Arguments.of(ServiceVOTestExample.build()
-                                .credentials(List.of(
-                                        CredentialVOTestExample.build().type("my-credential")
-                                                .trustedParticipantsLists(List.of("http://tir.de", "another-tir.de")),
-                                        CredentialVOTestExample.build().type("another-credential")
-                                                .trustedIssuersLists(List.of("til.de"))
-                                                .trustedParticipantsLists(List.of("tir.de")))),
-                        List.of("my-credential", "another-credential")));
+                // 8 - 2 Credentials with type (2 TIR entries / 1 TIR + 1 TIL entry)
+                Arguments.of(serviceVO8,
+                        List.of("my-credential")),
+                // 9 - 2 OIDC scopes, each with different credentials
+                Arguments.of(serviceVO9,
+                        List.of("my-credential"))
+        );
     }
 
     @Override
@@ -124,14 +239,49 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     }
 
     private static Stream<Arguments> invalidServices() {
+        // Credential with empty type
+        ServiceScopesEntryVO serviceScopesEntryVO =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO = CredentialVOTestExample.build().type(null);
+        serviceScopesEntryVO.add(credentialVO);
+        ServiceScopesVO serviceScopesVO = ServiceScopesVOTestExample.build();
+        serviceScopesVO.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO);
+        ServiceVO serviceVO = ServiceVOTestExample.build().oidcScopes(serviceScopesVO);
+        serviceVO.setDefaultOidcScope("test-oidc-scope");
+
+        // 2 - 2 Credentials, but 1 has empty type
+        ServiceScopesEntryVO serviceScopesEntryVO2 =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO2_1 = CredentialVOTestExample.build();
+        serviceScopesEntryVO2.add(credentialVO2_1);
+        CredentialVO credentialVO2_2 = CredentialVOTestExample.build().type(null);
+        serviceScopesEntryVO2.add(credentialVO2_2);
+        ServiceScopesVO serviceScopesVO2 = ServiceScopesVOTestExample.build();
+        serviceScopesVO2.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO2);
+        ServiceVO serviceVO2 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO2);
+        serviceVO2.setDefaultOidcScope("test-oidc-scope");
+
+        // 3 - 1 OIDC scope/Credential, but no default OIDC scope
+        ServiceScopesEntryVO serviceScopesEntryVO3 =
+                ServiceScopesEntryVOTestExample.build();
+        CredentialVO credentialVO3 = CredentialVOTestExample.build().type(null);
+        serviceScopesEntryVO3.add(credentialVO3);
+        ServiceScopesVO serviceScopesVO3 = ServiceScopesVOTestExample.build();
+        serviceScopesVO3.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO3);
+        ServiceVO serviceVO3 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO3);
+        serviceVO3.setDefaultOidcScope(null);
+
         return Stream.of(
-                Arguments.of(ServiceVOTestExample.build().credentials(null)),
-                Arguments.of(ServiceVOTestExample.build().id("my-service").credentials(null)),
-                Arguments.of(
-                        ServiceVOTestExample.build().credentials(List.of(CredentialVOTestExample.build().type(null)))),
-                Arguments.of(
-                        ServiceVOTestExample.build().credentials(
-                                List.of(CredentialVOTestExample.build(), CredentialVOTestExample.build().type(null))))
+                // Service with empty OIDC scopes
+                Arguments.of(ServiceVOTestExample.build().oidcScopes(null)),
+                // Service with ID but empty OIDC scopes
+                Arguments.of(ServiceVOTestExample.build().id("my-service").oidcScopes(null)),
+                // Credential with empty type
+                Arguments.of(serviceVO),
+                // 2 - 2 Credentials, but 1 has empty type
+                Arguments.of(serviceVO2),
+                // 3 - 1 OIDC scope/Credential, but no default OIDC scope
+                Arguments.of(serviceVO3)
         );
     }
 
@@ -177,7 +327,7 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
         theService.setId("my-service");
         assertEquals(HttpStatus.CREATED, testClient.createService(theService).getStatus(),
                 "The service should be initially created.");
-        HttpResponse<java.util.List<java.lang.String>> scopeResponse = testClient.getScopeForService("my-service");
+        HttpResponse<ScopeVO> scopeResponse = testClient.getScopeForService("my-service", null);
 		java.util.List<java.lang.String> returnedScope = scopeResponse.body();
         assertTrue(returnedScope.size() == expectedScopes.size() && returnedScope.containsAll(
                         expectedScopes) && expectedScopes.containsAll(returnedScope),
@@ -195,7 +345,7 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     @Test
     @Override
     public void getScopeForService404() throws Exception {
-        assertEquals(HttpStatus.NOT_FOUND, testClient.getScopeForService("my-service").getStatus(),
+        assertEquals(HttpStatus.NOT_FOUND, testClient.getScopeForService("my-service", null).getStatus(),
                 "If no such service exists, a 404 should be returned.");
     }
 
@@ -235,8 +385,17 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
 
         List<ServiceVO> services = new ArrayList<>();
         for (int i = 10; i < 30; i++) {
-            ServiceVO serviceVO = ServiceVOTestExample.build().id(String.valueOf(i))
-                    .credentials(List.of(CredentialVOTestExample.build()));
+            ServiceScopesEntryVO serviceScopesEntryVO =
+                    ServiceScopesEntryVOTestExample.build();
+            CredentialVO credentialVO = CredentialVOTestExample.build();
+            serviceScopesEntryVO.add(credentialVO);
+            ServiceScopesVO serviceScopesVO = ServiceScopesVOTestExample.build();
+            serviceScopesVO.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO);
+            ServiceVO serviceVO = ServiceVOTestExample.build()
+                    .id(String.valueOf(i))
+                    .oidcScopes(serviceScopesVO);
+            serviceVO.setDefaultOidcScope("test-oidc-scope");
+
             assertEquals(HttpStatus.CREATED, testClient.createService(serviceVO).status(),
                     "Initial creation should succeed.");
             services.add(serviceVO);
