@@ -187,8 +187,8 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
         serviceScopesEntryVO9_2.add(credentialVO9_2);
         serviceScopesEntryVO9_2.add(credentialVO9_3);
         ServiceScopesVO serviceScopesVO9 = ServiceScopesVOTestExample.build();
-        serviceScopesVO5.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO9_1);
-        serviceScopesVO5.setAdditionalProperties("another-oidc-scope", serviceScopesEntryVO9_2);
+        serviceScopesVO9.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO9_1);
+        serviceScopesVO9.setAdditionalProperties("another-oidc-scope", serviceScopesEntryVO9_2);
         ServiceVO serviceVO9 = ServiceVOTestExample.build().oidcScopes(serviceScopesVO9);
         serviceVO9.setDefaultOidcScope("test-oidc-scope");
 
