@@ -8,7 +8,9 @@ import org.fiware.iam.repository.*;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Responsible for mapping entities from the Service api domain to the internal model.
@@ -16,17 +18,48 @@ import java.util.List;
 @Mapper(componentModel = "jsr330")
 public interface ServiceMapper {
 
-	Service map(ServiceVO serviceVO);
+	default Service map(ServiceVO serviceVO) {
+		return new Service()
+				.setDefaultOidcScope(serviceVO.getDefaultOidcScope())
+				.setId(serviceVO.getId())
+				.setOidcScopes(map(serviceVO.getOidcScopes(), serviceVO.getId()));
+	}
 
 	ServiceVO map(Service service);
 
-	ServiceScopesEntry map(ServiceScopesEntryVO serviceScopesEntryVO);
+	default ServiceScope map(ServiceScopesEntryVO serviceScopesEntryVO, String scopeName, String serviceName) {
+		return new ServiceScope()
+				.setId("%s_%s".formatted(scopeName, serviceName))
+				.setScopeName(scopeName)
+				.setCredentials(serviceScopesEntryVO.stream().map(this::map).toList());
+	}
 
-	ServiceScopesEntryVO map(ServiceScopesEntry serviceScopesEntry);
+	ServiceScopesEntryVO map(ServiceScope serviceScope);
 
-	ServiceScopes map(ServiceScopesVO serviceScopesVO);
+	default Collection<ServiceScope> map(ServiceScopesVO value, String serviceName) {
+		if (value.getAdditionalProperties() == null) {
+			return List.of();
+		}
+		return value
+				.getAdditionalProperties()
+				.entrySet()
+				.stream()
+				.map(e -> map(e.getValue(), e.getKey(), serviceName))
+				.toList();
+	}
 
-	ServiceScopesVO map(ServiceScopes serviceScopes);
+	default ServiceScopesVO mapEntries(Collection<ServiceScope> value) {
+		ServiceScopesVO mappedScopes = new ServiceScopesVO();
+		if (value != null) {
+			value.forEach(e -> {
+						ServiceScopesEntryVO scopes = new ServiceScopesEntryVO();
+						scopes.addAll(map(e.getCredentials()));
+						mappedScopes.setAdditionalProperties(e.getScopeName(), scopes);
+					}
+			);
+		}
+		return mappedScopes;
+	}
 
 	default Credential map(CredentialVO credentialVO) {
 		if (credentialVO == null) {
@@ -35,10 +68,17 @@ public interface ServiceMapper {
 		Credential credential = new Credential()
 				.setCredentialType(credentialVO.getType());
 		List<EndpointEntry> trustedList = new ArrayList<>();
-		trustedList.addAll(issuersToEntries(credentialVO.getTrustedIssuersLists()));
-		trustedList.addAll(participantsToEntries(credentialVO.getTrustedParticipantsLists()));
+		Optional.ofNullable(issuersToEntries(credentialVO.getTrustedIssuersLists())).ifPresent(trustedList::addAll);
+		Optional.ofNullable(participantsToEntries(credentialVO.getTrustedParticipantsLists())).ifPresent(trustedList::addAll);
 		credential.setTrustedLists(trustedList);
 		return credential;
+	}
+
+	default Collection<CredentialVO> map(Collection<Credential> credentials) {
+		if (credentials == null) {
+			return null;
+		}
+		return credentials.stream().map(this::map).toList();
 	}
 
 	default CredentialVO map(Credential credential) {

@@ -27,8 +27,6 @@ public class Service {
 
 	private String defaultOidcScope;
 
-	private ServiceScopes oidcScopes;
-
-	//@OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	//private Collection<Credential> credentials;
+	@OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private Collection<ServiceScope> oidcScopes;
 }

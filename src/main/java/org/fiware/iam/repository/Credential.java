@@ -23,8 +23,8 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @Entity
-@EqualsAndHashCode(exclude = "service")
-@ToString(exclude = "service")
+@EqualsAndHashCode(exclude = "serviceScope")
+@ToString(exclude = "serviceScope")
 public class Credential {
 
 	@GeneratedValue
@@ -37,8 +37,8 @@ public class Credential {
 	private List<EndpointEntry> trustedLists;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "service_id")
-	private Service service;
+	@JoinColumn(name = "service_scope_id")
+	private ServiceScope serviceScope;
 
 
 
