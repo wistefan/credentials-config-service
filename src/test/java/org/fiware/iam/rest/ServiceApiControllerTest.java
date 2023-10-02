@@ -59,21 +59,18 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     }
 
     private static Stream<Arguments> validServices() {
-        // Empty service
-        ServiceVO serviceVOEmpty = ServiceVOTestExample.build();
-        serviceVOEmpty.setDefaultOidcScope("test-oidc-scope");
-
         // Empty service with ID
-        ServiceVO serviceVOEmptyWithId = ServiceVOTestExample.build().id("my-service");
-        serviceVOEmptyWithId.setDefaultOidcScope("test-oidc-scope");
-
-        // Empty credential
         ServiceScopesEntryVO serviceScopesEntryVO =
                 ServiceScopesEntryVOTestExample.build();
         CredentialVO credentialVO = CredentialVOTestExample.build();
         serviceScopesEntryVO.add(credentialVO);
         ServiceScopesVO serviceScopesVO = ServiceScopesVOTestExample.build();
         serviceScopesVO.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO);
+        ServiceVO serviceVOEmptyWithId = ServiceVOTestExample.build().id("my-service");
+        serviceVOEmptyWithId.setDefaultOidcScope("test-oidc-scope");
+        serviceVOEmptyWithId.setOidcScopes(serviceScopesVO);
+
+        // Empty credential
         ServiceVO serviceVO = ServiceVOTestExample.build().oidcScopes(serviceScopesVO);
         serviceVO.setDefaultOidcScope("test-oidc-scope");
 
@@ -193,9 +190,6 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
         serviceVO9.setDefaultOidcScope("test-oidc-scope");
 
         return Stream.of(
-                // Empty service
-                Arguments.of(
-                        serviceVOEmpty, List.of()),
                 // Empty service with ID
                 Arguments.of(serviceVOEmptyWithId, List.of()),
                 // Empty credential
