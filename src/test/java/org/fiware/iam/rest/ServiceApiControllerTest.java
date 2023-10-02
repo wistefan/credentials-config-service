@@ -58,21 +58,25 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
         createService201();
     }
 
-    private static Stream<Arguments> validServices() {
-        // Empty service with ID
+    private static ServiceVO getEmptyService() {
         ServiceScopesEntryVO serviceScopesEntryVO =
                 ServiceScopesEntryVOTestExample.build();
         CredentialVO credentialVO = CredentialVOTestExample.build();
         serviceScopesEntryVO.add(credentialVO);
         ServiceScopesVO serviceScopesVO = ServiceScopesVOTestExample.build();
         serviceScopesVO.setAdditionalProperties("test-oidc-scope", serviceScopesEntryVO);
-        ServiceVO serviceVOEmptyWithId = ServiceVOTestExample.build().id("my-service");
-        serviceVOEmptyWithId.setDefaultOidcScope("test-oidc-scope");
-        serviceVOEmptyWithId.setOidcScopes(serviceScopesVO);
+        ServiceVO serviceVO = ServiceVOTestExample.build();
+        serviceVO.setDefaultOidcScope("test-oidc-scope");
+        serviceVO.setOidcScopes(serviceScopesVO);
+        return serviceVO;
+    }
+
+    private static Stream<Arguments> validServices() {
+        // Empty service with ID
+        ServiceVO serviceVOEmptyWithId = getEmptyService().id("my-service");
 
         // Empty credential
-        ServiceVO serviceVO = ServiceVOTestExample.build().oidcScopes(serviceScopesVO);
-        serviceVO.setDefaultOidcScope("test-oidc-scope");
+        ServiceVO serviceVO = getEmptyService();
 
         // 2 - Credential with type
         ServiceScopesEntryVO serviceScopesEntryVO2 =
@@ -290,7 +294,7 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     @Test
     @Override
     public void createService409() throws Exception {
-        ServiceVO serviceToBeCreated = ServiceVOTestExample.build().id("my-service");
+        ServiceVO serviceToBeCreated = getEmptyService().id("my-service");
         assertEquals(HttpStatus.CREATED, testClient.createService(serviceToBeCreated).getStatus(),
                 "The initial creation should succeed.");
         try {
@@ -306,7 +310,7 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     @Test
     @Override
     public void deleteServiceById204() throws Exception {
-        ServiceVO serviceToBeCreated = ServiceVOTestExample.build().id("my-service");
+        ServiceVO serviceToBeCreated = getEmptyService().id("my-service");
         assertEquals(HttpStatus.CREATED, testClient.createService(serviceToBeCreated).getStatus(),
                 "The initial creation should succeed.");
 
@@ -466,7 +470,7 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     @ParameterizedTest
     @MethodSource("validServices")
     public void updateService200(ServiceVO serviceVO) throws Exception {
-        HttpResponse<?> initialCreate = testClient.createService(ServiceVOTestExample.build());
+        HttpResponse<?> initialCreate = testClient.createService(getEmptyService());
         assertEquals(HttpStatus.CREATED, initialCreate.status(), "The creation should have been succeeded.");
         // id is not allowed to be updated
         theService = serviceVO.id("packet-delivery-service");
@@ -487,7 +491,7 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     @ParameterizedTest
     @MethodSource("invalidServices")
     public void updateService400(ServiceVO serviceVO) throws Exception {
-        HttpResponse<?> initialCreate = testClient.createService(ServiceVOTestExample.build());
+        HttpResponse<?> initialCreate = testClient.createService(getEmptyService());
         assertEquals(HttpStatus.CREATED, initialCreate.status(), "The creation should have been succeeded.");
         theService = serviceVO;
         updateService400();
@@ -496,7 +500,7 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
     @Test
     @Override
     public void updateService404() throws Exception {
-        ServiceVO serviceVO = ServiceVOTestExample.build();
+        ServiceVO serviceVO = getEmptyService();
         assertEquals(HttpStatus.NOT_FOUND, testClient.updateService(serviceVO.getId(), serviceVO).status(),
                 "Only existing services can be updated.");
     }
