@@ -67,7 +67,7 @@
 
         <!-- code gen -->
         <version.org.openapitools.generator-maven-plugin>6.6.0</version.org.openapitools.generator-maven-plugin>
-        <version.io.kokuwa.micronaut.codegen>3.4.4</version.io.kokuwa.micronaut.codegen>
+        <version.io.kokuwa.micronaut.codegen>3.4.5</version.io.kokuwa.micronaut.codegen>
 
         <!-- test -->
         <version.org.mockito.mocktio-all>1.10.19</version.org.mockito.mocktio-all>
