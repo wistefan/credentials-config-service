@@ -23,22 +23,14 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @Entity
-@EqualsAndHashCode(exclude = "serviceScope")
-@ToString(exclude = "serviceScope")
 public class Credential {
 
-	@GeneratedValue
-	@Id
 	private Integer id;
 
 	private String credentialType;
 
-	@OneToMany(mappedBy = "credential", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<EndpointEntry> trustedLists;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "service_scope_id")
-	private ServiceScope serviceScope;
 
 
 

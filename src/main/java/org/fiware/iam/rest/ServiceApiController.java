@@ -40,14 +40,16 @@ public class ServiceApiController implements ServiceApi {
                     serviceVO.getId());
         }
         validateServiceVO(serviceVO);
+
+        Service mappedService = serviceMapper.map(serviceVO);
+        Service savedService = serviceRepository.save(mappedService);
+
         return HttpResponse.created(
                 URI.create(
                         ServiceApi.PATH_GET_SERVICE.replace(
-                                "{id}",
-                                serviceRepository.save(
-                                        serviceMapper.map(serviceVO)).getId())));
+                                "{id}", savedService.getId())));
     }
-
+    
     @Override
     public HttpResponse<Object> deleteServiceById(@NonNull String id) {
         if (!serviceRepository.existsById(id)) {
@@ -68,7 +70,6 @@ public class ServiceApiController implements ServiceApi {
                         oidcScope;
         ServiceScopesEntryVO serviceScopesEntryVO = serviceMapper.map(serviceRepository.getById(id))
                 .getOidcScopes()
-                .getAdditionalProperties()
                 .get(selectedOidcScope);
         ScopeVO scopeVO = new ScopeVO();
         scopeVO.addAll(serviceScopesEntryVO.stream().map(CredentialVO::getType).toList());
@@ -132,13 +133,12 @@ public class ServiceApiController implements ServiceApi {
         }
 
         String defaultOidcScope = serviceVO.getDefaultOidcScope();
-        if (serviceVO.getOidcScopes().getAdditionalProperties().get(defaultOidcScope) == null) {
+        if (serviceVO.getOidcScopes().get(defaultOidcScope) == null) {
             throw new IllegalArgumentException("Default OIDC scope must exist in OIDC scopes array.");
         }
 
         ServiceScopesEntryVO serviceScopesEntryVO = serviceVO
                 .getOidcScopes()
-                .getAdditionalProperties()
                 .get(defaultOidcScope);
         Optional<CredentialVO> nullType = serviceScopesEntryVO
                 .stream()
