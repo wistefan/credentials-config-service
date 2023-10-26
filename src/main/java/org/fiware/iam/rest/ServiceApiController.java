@@ -49,7 +49,7 @@ public class ServiceApiController implements ServiceApi {
                         ServiceApi.PATH_GET_SERVICE.replace(
                                 "{id}", savedService.getId())));
     }
-    
+
     @Override
     public HttpResponse<Object> deleteServiceById(@NonNull String id) {
         if (!serviceRepository.existsById(id)) {
@@ -61,14 +61,15 @@ public class ServiceApiController implements ServiceApi {
 
     @Override
     public HttpResponse<ScopeVO> getScopeForService(@NonNull String id, @Nullable String oidcScope) {
-        if (!serviceRepository.existsById(id)) {
+        Optional<Service> service = serviceRepository.findById(id);
+        if (service.isEmpty()) {
             return HttpResponse.notFound();
         }
         String selectedOidcScope =
                 oidcScope == null ?
-                        serviceMapper.map(serviceRepository.getById(id)).getDefaultOidcScope() :
+                        serviceMapper.map(service.get()).getDefaultOidcScope() :
                         oidcScope;
-        ServiceScopesEntryVO serviceScopesEntryVO = serviceMapper.map(serviceRepository.getById(id))
+        ServiceScopesEntryVO serviceScopesEntryVO = serviceMapper.map(service.get())
                 .getOidcScopes()
                 .get(selectedOidcScope);
         ScopeVO scopeVO = new ScopeVO();
@@ -78,10 +79,10 @@ public class ServiceApiController implements ServiceApi {
 
     @Override
     public HttpResponse<ServiceVO> getService(@NonNull String id) {
-        if (!serviceRepository.existsById(id)) {
-            return HttpResponse.notFound();
-        }
-        return HttpResponse.ok(serviceMapper.map(serviceRepository.getById(id)));
+        return serviceRepository.findById(id)
+                .map(serviceMapper::map)
+                .map(HttpResponse::ok)
+                .orElse(HttpResponse.notFound());
     }
 
     @Override
@@ -119,8 +120,7 @@ public class ServiceApiController implements ServiceApi {
         // just in case none is set in the object
         serviceVO.setId(id);
         serviceRepository.deleteById(id);
-        return HttpResponse.ok(
-                serviceMapper.map(serviceRepository.save(serviceMapper.map(serviceVO))));
+        return HttpResponse.ok(serviceMapper.map(serviceRepository.save(serviceMapper.map(serviceVO))));
     }
 
     // validate a service vo, e.g. check forbidden null values
