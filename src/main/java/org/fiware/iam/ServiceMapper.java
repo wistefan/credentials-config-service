@@ -1,9 +1,6 @@
 package org.fiware.iam;
 
-import org.fiware.iam.ccs.model.CredentialVO;
-import org.fiware.iam.ccs.model.ServiceScopesEntryVO;
-import org.fiware.iam.ccs.model.ServiceScopesVO;
-import org.fiware.iam.ccs.model.ServiceVO;
+import org.fiware.iam.ccs.model.*;
 import org.fiware.iam.repository.Credential;
 import org.fiware.iam.repository.EndpointEntry;
 import org.fiware.iam.repository.EndpointType;
@@ -21,17 +18,20 @@ public interface ServiceMapper {
 
     Service map(ServiceVO serviceVO);
 
-    default Map<String, Collection<Credential>> map(ServiceScopesVO value) {
+
+    default Map<String,Collection<Credential>> map(Map<String,ServiceScopesEntryVO> value){
         return Optional.ofNullable(value)
-                .orElseGet(ServiceScopesVO::new)
+                .orElseGet(Map::of)
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().stream().map(this::map).toList()));
     }
 
-    default ServiceScopesVO mapCredentials(Map<String, Collection<Credential>> scopes) {
-        ServiceScopesVO answer = new ServiceScopesVO();
-        scopes.entrySet().forEach(entry -> {
+    default Map<String,ServiceScopesEntryVO> mapCredentials(Map<String,Collection<Credential>> value){
+        Map<String,ServiceScopesEntryVO> answer = new HashMap<>();
+        Optional.ofNullable(value)
+                .orElseGet(Map::of)
+                .entrySet().forEach(entry -> {
             ServiceScopesEntryVO credentialVOS = new ServiceScopesEntryVO();
             entry.getValue().stream().map(this::map).forEach(credentialVOS::add);
             answer.put(entry.getKey(), credentialVOS);
@@ -73,7 +73,7 @@ public interface ServiceMapper {
 
     /**
      * Map a list of string-entries, encoding TrustedParticipants endpoints to a list of {@link EndpointEntry} with
-     * type {{@link EndpointType.TRUSTED_PARTICIPANTS}
+     * type {{@link EndpointType#TRUSTED_PARTICIPANTS}
      */
     default List<EndpointEntry> participantsToEntries(List<String> endpoints) {
         if (endpoints == null) {
@@ -88,7 +88,7 @@ public interface ServiceMapper {
 
     /**
      * Map a list of string-entries, encoding TrustedIssuers endpoints to a list of {@link EndpointEntry} with
-     * type {{@link EndpointType.TRUSTED_ISSUERS}
+     * type {{@link EndpointType#TRUSTED_ISSUERS}
      */
     default List<EndpointEntry> issuersToEntries(List<String> endpoints) {
         if (endpoints == null) {

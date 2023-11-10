@@ -25,9 +25,7 @@ class ServiceMapperTest {
                 .trustedIssuersLists(List.of("http://til.de"))
                 .trustedParticipantsLists(List.of("http://tir.de"));
         serviceScopesEntryVO_1.add(credentialVO_1);
-        ServiceScopesVO serviceScopesVO = ServiceScopesVOTestExample.build();
-        serviceScopesVO.put("test-oidc-scope", serviceScopesEntryVO_1);
-        ServiceVO serviceVO = ServiceVOTestExample.build().oidcScopes(serviceScopesVO);
+        ServiceVO serviceVO = ServiceVOTestExample.build().oidcScopes(Map.of("test-oidc-scope", serviceScopesEntryVO_1));
         serviceVO.setDefaultOidcScope("test-oidc-scope");
 
         // Map to Service
@@ -86,10 +84,7 @@ class ServiceMapperTest {
                 .trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
         serviceScopesEntryVO_2.add(credentialVO_2);
         serviceScopesEntryVO_2.add(credentialVO_3);
-        ServiceScopesVO serviceScopesVO = ServiceScopesVOTestExample.build();
-        serviceScopesVO.put("test-oidc-scope", serviceScopesEntryVO_1);
-        serviceScopesVO.put("another-oidc-scope", serviceScopesEntryVO_2);
-        ServiceVO serviceVO = ServiceVOTestExample.build().oidcScopes(serviceScopesVO);
+        ServiceVO serviceVO = ServiceVOTestExample.build().oidcScopes(Map.of("test-oidc-scope", serviceScopesEntryVO_1,"another-oidc-scope", serviceScopesEntryVO_2));
         serviceVO.setDefaultOidcScope("test-oidc-scope");
 
         // Map to Service
@@ -187,11 +182,11 @@ class ServiceMapperTest {
         assertEquals("test-oidc-scope", serviceVO.getDefaultOidcScope(),
                 "ServiceVO should have correct defaultOidcScope");
 
-        ServiceScopesVO serviceScopesVO = serviceVO.getOidcScopes();
+        Map<String, ServiceScopesEntryVO> serviceScopes = serviceVO.getOidcScopes();
 
-        assertEquals(1, serviceScopesVO.size(), "ServiceVO should have 1 OIDC scope");
+        assertEquals(1, serviceScopes.size(), "ServiceVO should have 1 OIDC scope");
 
-        ServiceScopesEntryVO serviceScopesEntryVO = serviceScopesVO.get("test-oidc-scope");
+        ServiceScopesEntryVO serviceScopesEntryVO = serviceScopes.get("test-oidc-scope");
         assertNotNull(serviceScopesEntryVO,
                 "ServiceVO should have an OIDC scope with key '\"test-oidc-scope\"'");
 

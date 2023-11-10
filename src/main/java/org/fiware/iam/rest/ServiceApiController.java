@@ -133,13 +133,13 @@ public class ServiceApiController implements ServiceApi {
         }
 
         String defaultOidcScope = serviceVO.getDefaultOidcScope();
-        if (serviceVO.getOidcScopes().get(defaultOidcScope) == null) {
-            throw new IllegalArgumentException("Default OIDC scope must exist in OIDC scopes array.");
-        }
-
         ServiceScopesEntryVO serviceScopesEntryVO = serviceVO
                 .getOidcScopes()
                 .get(defaultOidcScope);
+        if (serviceScopesEntryVO == null) {
+            throw new IllegalArgumentException("Default OIDC scope must exist in OIDC scopes array.");
+        }
+
         Optional<CredentialVO> nullType = serviceScopesEntryVO
                 .stream()
                 .filter(cvo -> cvo.getType() == null)
