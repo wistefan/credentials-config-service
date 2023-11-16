@@ -19,19 +19,11 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @Entity
-@EqualsAndHashCode(exclude = "credential")
-@ToString(exclude = "credential")
 public class EndpointEntry {
 
-	@GeneratedValue
-	@Id
 	private Integer id;
 
 	private EndpointType type;
 
 	private String endpoint;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "credential_id")
-	private Credential credential;
 }

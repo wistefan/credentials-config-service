@@ -67,7 +67,7 @@
 
         <!-- code gen -->
         <version.org.openapitools.generator-maven-plugin>6.6.0</version.org.openapitools.generator-maven-plugin>
-        <version.io.kokuwa.micronaut.codegen>3.3.1</version.io.kokuwa.micronaut.codegen>
+        <version.io.kokuwa.micronaut.codegen>3.4.6</version.io.kokuwa.micronaut.codegen>
 
         <!-- test -->
         <version.org.mockito.mocktio-all>1.10.19</version.org.mockito.mocktio-all>
@@ -246,6 +246,7 @@
                             <strictSpec>true</strictSpec>
                             <modelPackage>org.fiware.iam.ccs.model</modelPackage>
                             <generateAliasAsModel>true</generateAliasAsModel>
+                            <generateModels>true</generateModels>
                             <generateApiTests>true</generateApiTests>
                             <generatorName>micronaut</generatorName>
                             <modelNameSuffix>VO</modelNameSuffix>
