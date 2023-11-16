@@ -1,4 +1,4 @@
-DROP TABLE `service` CASCADE;
+DROP TABLE IF EXISTS `service` CASCADE;
 
 CREATE TABLE IF NOT EXISTS `service` (
     `id` varchar(255) NOT NULL PRIMARY KEY,
