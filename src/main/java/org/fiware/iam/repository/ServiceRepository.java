@@ -13,25 +13,4 @@ import java.util.Optional;
  */
 public interface ServiceRepository extends PageableRepository<Service, String> {
 
-	/**
-	 * Find services by their ID. All child values will be returned through left-joins to fill out the full entity.
-	 *
-	 * @param id of the service
-	 * @return the complete service
-	 */
-	@Join(value = "credentials", type = Join.Type.LEFT_FETCH)
-	@Join(value = "credentials.trustedLists", type = Join.Type.LEFT_FETCH)
-	Service getById(String id);
-
-	/**
-	 * Get all services. All child values will be returned through left-joins to fill out the full entity.
-	 *
-	 * @param pageable pagination information to be used
-	 * @return the current page
-	 */
-	@NonNull
-	@Join(value = "credentials", type = Join.Type.LEFT_FETCH)
-	@Join(value = "credentials.trustedLists", type = Join.Type.LEFT_FETCH)
-	Page<Service> findAll(@NonNull Pageable pageable);
 }
-

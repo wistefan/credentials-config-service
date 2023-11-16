@@ -1,16 +1,16 @@
 package org.fiware.iam.repository;
 
 import io.micronaut.core.annotation.Introspected;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import io.micronaut.core.annotation.TypeHint;
+import io.micronaut.data.annotation.TypeDef;
+import io.micronaut.data.model.DataType;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Data entity representing a service
@@ -25,6 +25,8 @@ public class Service {
 	@Id
 	private String id;
 
-	@OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	private Collection<Credential> credentials;
+	private String defaultOidcScope;
+
+	@TypeDef(type = DataType.JSON)
+	private Map<String,Collection<Credential>> oidcScopes;
 }
