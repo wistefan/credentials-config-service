@@ -31,8 +31,7 @@ public class Credential {
 
 	private List<EndpointEntry> trustedLists;
 
+	private boolean verifyHolder;
 
-
-
-
+	private String holderClaim;
 }
