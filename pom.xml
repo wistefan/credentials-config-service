@@ -537,7 +537,7 @@
                         <artifactId>jib-maven-plugin</artifactId>
                         <configuration combine.self="override">
                             <from>
-                                <image>registry.access.redhat.com/ubi8/openjdk-17:1.15</image>
+                                <image>registry.access.redhat.com/ubi8/openjdk-21:1.21-1</image>
                             </from>
                             <to>
                                 <image>${image.registry}/${image.repository}/${project.artifactId}</image>
