@@ -107,7 +107,7 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
 		CredentialVO credentialVO5 = CredentialVOTestExample.build()
 				.type("my-credential")
 				.trustedIssuersLists(List.of("http://til.de"))
-				.trustedParticipantsLists(List.of("http://tir.de"));
+				.trustedParticipantsLists(List.of(new TrustedParticipantsListVO().url("http://tir.de").type(TrustedParticipantsListVO.Type.EBSI)));
 		serviceScopesEntryVO5.add(credentialVO5);
 		ServiceVO serviceVO5 = ServiceVOTestExample.build().oidcScopes(Map.of("test-oidc-scope", serviceScopesEntryVO5));
 		serviceVO5.setDefaultOidcScope("test-oidc-scope");
@@ -118,7 +118,9 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
 		CredentialVO credentialVO6 = CredentialVOTestExample.build()
 				.type("my-credential")
 				.trustedIssuersLists(List.of("http://til.de"))
-				.trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
+				.trustedParticipantsLists(List.of(
+						new TrustedParticipantsListVO().url("http://tir.de").type(TrustedParticipantsListVO.Type.EBSI),
+						new TrustedParticipantsListVO().url("http://another-tir.de").type(TrustedParticipantsListVO.Type.EBSI)));
 		serviceScopesEntryVO6.add(credentialVO6);
 		ServiceVO serviceVO6 = ServiceVOTestExample.build().oidcScopes(Map.of("test-oidc-scope", serviceScopesEntryVO6));
 		serviceVO6.setDefaultOidcScope("test-oidc-scope");
@@ -128,7 +130,9 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
 				ServiceScopesEntryVOTestExample.build();
 		CredentialVO credentialVO7 = CredentialVOTestExample.build()
 				.type("my-credential")
-				.trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
+				.trustedParticipantsLists(List.of(
+						new TrustedParticipantsListVO().url("http://tir.de").type(TrustedParticipantsListVO.Type.EBSI),
+						new TrustedParticipantsListVO().url("http://another-tir.de").type(TrustedParticipantsListVO.Type.EBSI)));
 		serviceScopesEntryVO7.add(credentialVO7);
 		ServiceVO serviceVO7 = ServiceVOTestExample.build().oidcScopes(Map.of("test-oidc-scope", serviceScopesEntryVO7));
 		serviceVO7.setDefaultOidcScope("test-oidc-scope");
@@ -138,11 +142,13 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
 				ServiceScopesEntryVOTestExample.build();
 		CredentialVO credentialVO8_1 = CredentialVOTestExample.build()
 				.type("my-credential")
-				.trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
+				.trustedParticipantsLists(List.of(
+						new TrustedParticipantsListVO().url("http://tir.de").type(TrustedParticipantsListVO.Type.EBSI),
+						new TrustedParticipantsListVO().url("http://another-tir.de").type(TrustedParticipantsListVO.Type.EBSI)));
 		CredentialVO credentialVO8_2 = CredentialVOTestExample.build()
 				.type("another-credential")
 				.trustedIssuersLists(List.of("til.de"))
-				.trustedParticipantsLists(List.of("http://tir.de"));
+				.trustedParticipantsLists(List.of(new TrustedParticipantsListVO().url("http://tir.de").type(TrustedParticipantsListVO.Type.EBSI)));
 		serviceScopesEntryVO8.add(credentialVO8_1);
 		serviceScopesEntryVO8.add(credentialVO8_2);
 		ServiceVO serviceVO8 = ServiceVOTestExample.build().oidcScopes(Map.of("test-oidc-scope", serviceScopesEntryVO8));
@@ -156,16 +162,20 @@ public class ServiceApiControllerTest implements ServiceApiTestSpec {
 		CredentialVO credentialVO9_1 = CredentialVOTestExample.build()
 				.type("my-credential")
 				.trustedIssuersLists(List.of("http://til.de"))
-				.trustedParticipantsLists(List.of("http://tir.de"));
+				.trustedParticipantsLists(List.of(new TrustedParticipantsListVO().url("http://tir.de").type(TrustedParticipantsListVO.Type.EBSI)));
 		serviceScopesEntryVO9_1.add(credentialVO9_1);
 		CredentialVO credentialVO9_2 = CredentialVOTestExample.build()
 				.type("my-credential")
 				.trustedIssuersLists(List.of("http://til.de"))
-				.trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
+				.trustedParticipantsLists(List.of(
+						new TrustedParticipantsListVO().url("http://tir.de").type(TrustedParticipantsListVO.Type.EBSI),
+						new TrustedParticipantsListVO().url("http://another-tir.de").type(TrustedParticipantsListVO.Type.EBSI)));
 		CredentialVO credentialVO9_3 = CredentialVOTestExample.build()
 				.type("another-credential")
 				.trustedIssuersLists(List.of("http://til.de"))
-				.trustedParticipantsLists(List.of("http://tir.de", "another-tir.de"));
+				.trustedParticipantsLists(List.of(
+						new TrustedParticipantsListVO().url("http://tir.de").type(TrustedParticipantsListVO.Type.EBSI),
+						new TrustedParticipantsListVO().url("http://another-tir.de").type(TrustedParticipantsListVO.Type.EBSI)));
 		serviceScopesEntryVO9_2.add(credentialVO9_2);
 		serviceScopesEntryVO9_2.add(credentialVO9_3);
 		ServiceVO serviceVO9 = ServiceVOTestExample.build().oidcScopes(Map.of("test-oidc-scope", serviceScopesEntryVO9_1, "another-oidc-scope", serviceScopesEntryVO9_2));
