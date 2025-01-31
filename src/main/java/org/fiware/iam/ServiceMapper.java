@@ -1,10 +1,7 @@
 package org.fiware.iam;
 
 import org.fiware.iam.ccs.model.*;
-import org.fiware.iam.repository.Credential;
-import org.fiware.iam.repository.EndpointEntry;
-import org.fiware.iam.repository.EndpointType;
-import org.fiware.iam.repository.Service;
+import org.fiware.iam.repository.*;
 import org.mapstruct.Mapper;
 
 import java.util.*;
@@ -18,6 +15,9 @@ public interface ServiceMapper {
 
 	Service map(ServiceVO serviceVO);
 
+	TrustedParticipantsListVO.Type map(ListType type);
+
+	ListType map(TrustedParticipantsListVO.Type type);
 
 	default Map<String, Collection<Credential>> map(Map<String, ServiceScopesEntryVO> value) {
 		return Optional.ofNullable(value)
@@ -86,13 +86,14 @@ public interface ServiceMapper {
 	 * Map a list of string-entries, encoding TrustedParticipants endpoints to a list of {@link EndpointEntry} with
 	 * type {{@link EndpointType#TRUSTED_PARTICIPANTS}
 	 */
-	default List<EndpointEntry> participantsToEntries(List<String> endpoints) {
+	default List<EndpointEntry> participantsToEntries(List<TrustedParticipantsListVO> endpoints) {
 		if (endpoints == null) {
 			return null;
 		}
 		return endpoints.stream()
 				.map(endpoint -> new EndpointEntry()
-						.setEndpoint(endpoint)
+						.setEndpoint(endpoint.getUrl())
+						.setListType(map(endpoint.getType()))
 						.setType(EndpointType.TRUSTED_PARTICIPANTS))
 				.toList();
 	}
@@ -128,13 +129,15 @@ public interface ServiceMapper {
 	/**
 	 * Return participant endpoints from the {@link EndpointEntry} list to a list of strings
 	 */
-	default List<String> entriesToParticipants(List<EndpointEntry> endpoints) {
+	default List<TrustedParticipantsListVO> entriesToParticipants(List<EndpointEntry> endpoints) {
 		if (endpoints == null) {
 			return List.of();
 		}
 		return endpoints.stream()
 				.filter(entry -> entry.getType().equals(EndpointType.TRUSTED_PARTICIPANTS))
-				.map(EndpointEntry::getEndpoint)
+				.map(entry -> new TrustedParticipantsListVO()
+						.type(map(entry.getListType()))
+						.url(entry.getEndpoint()))
 				.toList();
 	}
 
